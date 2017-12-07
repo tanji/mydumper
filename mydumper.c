@@ -53,6 +53,11 @@ const char BINLOG_DIRECTORY[]= "binlog_snapshot";
 const char DAEMON_BINLOGS[]= "binlogs";
 #endif
 
+/* Some earlier versions of MySQL do not yet define MYSQL_TYPE_JSON */
+#ifndef MYSQL_TYPE_JSON
+#define MYSQL_TYPE_JSON 245
+#endif
+
 static GMutex * init_mutex = NULL;
 
 /* Program options */
@@ -1791,7 +1796,7 @@ void dump_database(MYSQL * conn, char *database, FILE *file, struct configuratio
 	char *query;
 	mysql_select_db(conn,database);
 	if (detected_server == SERVER_TYPE_MYSQL)
-		query= g_strdup("SELECT TABLE_NAME, ENGINE, TABLE_TYPE as COMMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='%s'", database);
+		query= g_strdup_printf("SELECT TABLE_NAME, ENGINE, TABLE_TYPE as COMMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='%s'", database);
 	else
 		query= g_strdup_printf("SELECT TABLE_NAME, ENGINE, TABLE_TYPE as COMMENT FROM DATA_DICTIONARY.TABLES WHERE TABLE_SCHEMA='%s'", database);
 
