@@ -399,7 +399,6 @@ void write_snapshot_info(MYSQL *conn, FILE *file) {
 		}
 	}
 
-	fflush(file);
 	if (master)
 		mysql_free_result(master);
 	if (slave)
@@ -2004,8 +2003,6 @@ void dump_database(MYSQL * conn, char *database, FILE *file, struct configuratio
 
 	g_free(query);
 	mysql_free_result(result);
-	if(file)
-		fflush(file);
 
 	return;
 }
